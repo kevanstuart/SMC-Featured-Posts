@@ -21,58 +21,83 @@
 /**
  * SMCFP Admin class
  */
-class SMCFP_admin
+class Smcfp_Admin
 {
 
+
+	private static $initiated = false;
+
+
 	/**
-	 * Constructor - add hooks here
+	 * Entry function for the class
 	 */
-	function __construct()
+	public static function init() 
 	{
-		$this->addSmcfpPostColumn();
-		$this->addSmcfpMetaBox();
+		if (!self::$initiated)
+		{
+			self::init_hooks();
+		}
 	}
 
 
 	/**
-	 * Add custom meta box to edit posts page & save
+	 * Initializes WordPress hooks
 	 */
-	function addSmcfpMetaBox()
+	private static function init_hooks() 
 	{
-		add_action( 'add_meta_boxes', array($this, 'addMetaBox') );
-		add_action( 'save_post', array($this, 'saveMetaBox'), 10, 3 );
+		self::$initiated = true;
+
+		// Admin page menu
+		//add_action( 'admin_menu', array( 'Smcfp_Admin', 'adminMenu' ), 5 );
+
+		// Edit post Meta Box
+		add_action( 'add_meta_boxes', array('Smcfp_Admin', 'addMetaBox') );
+		add_action( 'save_post', array('Smcfp_Admin', 'saveMetaBox'), 10, 3 );
+
+		// Custom sortable column when viewing posts
+		add_filter( 'manage_posts_columns', array('Smcfp_Admin', 'addPostColumn') );
+		add_filter( 'manage_edit-post_sortable_columns', array('Smcfp_Admin', 'sortPostColumn') );
+		add_action( 'manage_posts_custom_column', array('Smcfp_Admin', 'managePostColumn'), 10, 2 );
 	}
 
 
 	/**
-	 * Add sortable, custom post column in posts list
+	 * Add admin options menu
 	 */
-	function addSmcfpPostColumn()
-	{
-		add_filter( 'manage_posts_columns', array($this, 'addPostColumn') );
-		add_filter( 'manage_edit-post_sortable_columns', array($this, 'sortPostColumn') );
-		add_action( 'manage_posts_custom_column', array($this, 'managePostColumn'), 10, 2 );
-	}
+	/*public static function adminMenu() {
+		$hook = add_options_page( 
+			__('SMC Featured Posts', 'smcfp'), 
+			__('SMC Featured Posts', 'smcfp'), 
+			'manage_options', 
+			'smc-featured-posts', 
+			array( 'Smcfp_Admin', 'displayPage' ) 
+		);
+	}*/
+
+
+	/*public static function displayPage()
+	{}*/
 
 
 	/**
 	 * Add custom Meta Box
 	 */
-	function addMetaBox()
+	public static function addMetaBox()
 	{
 		add_meta_box(
-			'smcfpMetaBox',
-			__( 'Featured Post', 'smcfp' ),
-			array($this, 'metaBoxCallback'),
-			'post',
-			'side'
+			  'smcfpMetaBox'
+			, __( 'Show as Featured Post', 'smcfp_admin' )
+			, array('Smcfp_Admin', 'metaBoxCallback')
+			, 'post'
+			, 'side'
 		);
 	}
+
 
 	/**
 	 * Save custom Meta Box
 	 */
-	function saveMetaBox($postId, $post, $update)
+	public static function saveMetaBox($postId, $post, $update)
 	{
 		// Nonce verified?
 		if( !isset($_POST["smc_fp_box_nonce"]) || 
@@ -112,10 +137,10 @@ class SMCFP_admin
 	/**
 	 * Render custom Meta Box
 	 */
-	function metaBoxCallback($post)
+	public static function metaBoxCallback($post)
 	{
 		wp_nonce_field( basename(__FILE__), 'smc_fp_box_nonce' );
-		$value = $this->getIsFeatured($post->ID);
+		$value = self::getIsFeatured($post->ID);
 
 		echo '<label for="smcfp_is_featured">';
 		echo '<input type="checkbox" id="smcfp_is_featured" name="smcfp_is_featured" value="true"';
@@ -134,9 +159,9 @@ class SMCFP_admin
 	/**
 	 * Add empty custom column to list
 	 */
-	function addPostColumn($columns)
+	public static function addPostColumn($columns)
 	{
-		$columns['is_featured'] = 'Is Featured';
+		$columns['featured'] = 'Featured';
 		return $columns;
 	}
 
@@ -144,9 +169,9 @@ class SMCFP_admin
 	/**
 	 * Add sort function to empty custom column
 	 */
-	function sortPostColumn($columns)
+	public static function sortPostColumn($columns)
 	{
-		$columns['is_featured'] = SMC_FEATURED_META_OPTION;
+		$columns['featured'] = SMC_FEATURED_META_OPTION;
 		return $columns;
 	}
 
@@ -154,11 +179,11 @@ class SMCFP_admin
 	/**
 	 * Add content to custom column
 	 */
-	function managePostColumn($columnName, $id)
+	public static function managePostColumn($columnName, $id)
 	{
 		switch ($columnName) {
-	    	case 'is_featured':
-	    		$is = $this->getIsFeatured($id);
+	    	case 'featured':
+	    		$is = self::getIsFeatured($id);
 	    		echo ($is) ? "Yes" : "No";
 	        break;
 	    }
@@ -168,7 +193,7 @@ class SMCFP_admin
 	/**
 	 * Get the post meta flag for "smc_featured_post"
 	 */
-	private function getIsFeatured($id)
+	private static function getIsFeatured($id)
 	{
 		$isFeatured = get_post_meta( $id, SMC_FEATURED_META_OPTION, TRUE);
 		return $isFeatured;

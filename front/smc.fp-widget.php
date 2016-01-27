@@ -21,7 +21,7 @@ class Smcfp_Widget extends WP_Widget
 		load_plugin_textdomain('smcfp');
 		parent::__construct(
 			'smcfp_widget',
-			__( 'SMCFP Widget' , 'smcfp'),
+			__( 'Featured Posts' , 'smcfp'),
 			array( 'description' => __( 'Display a list of Featured Posts' , 'smcfp') )
 		);
 	}
@@ -62,13 +62,6 @@ class Smcfp_Widget extends WP_Widget
 		{ 
 			echo $args['after_widget']; 
 		}
-
-		
-		/*if ( ! empty( $instance['number'] ) ) {
-			echo $args['before_title'] . 
-			apply_filters( 'widget_title', $instance['number'] ). $args['after_title'];
-		}*/
-		
 	}
 
 
@@ -112,7 +105,7 @@ class Smcfp_Widget extends WP_Widget
 			'meta_query'     => array(
 				array(
 					'key'   => SMC_FEATURED_META_OPTION,
-					'value' => 'true'
+					'value' => 1
 				)
 			)
    		);

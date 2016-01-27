@@ -3,7 +3,6 @@
  * Plugin name: SMC Selected Featured Posts
  * Description: Display a list of selected posts on the sidebar
  * Author: Kevan Stuart - Sometimes I Code
- * Adapted from: SAN – w3cgallery.com & Windowshostingpoint.com & Syed Balkhi
  * Version: 2.0
  * Licence: GPL
  * 
@@ -38,7 +37,7 @@ register_deactivation_hook( __FILE__, array('Smcfp', 'smcfp_deactivate') );
 
 
 /**
- * Require frontend end display classes
+ * Require frontend end display classes - initialize
  */
 require_once( SMC_FEATURED_DISPL_DIR . 'smc.fp-display.php' );
 require_once( SMC_FEATURED_DISPL_DIR . 'smc.fp-widget.php' );
@@ -46,7 +45,7 @@ add_action( 'init', array('Smcfp', 'init') );
 
 
 /**
- * Require admin class
+ * Require admin class - initialize
  */
 if ( is_admin() )
 {

@@ -76,27 +76,34 @@ class Smcfp
 	 */
 	public static function displayList()
 	{
+		$head  = get_option('smc_featured_heading', null);
 		$posts = self::getFeaturedPosts();
+
 		if (!is_null($posts) || $posts)
 		{
-			$listHtml = '';
+			$list = '';
 			foreach($posts AS $post)
 			{
-				$tempDate  = new DateTime($post->post_date);
-				$postDate  = $tempDate->format('d-m-Y');
-				$postLink  = get_permalink($post->ID);
-				$postTitle = $post->post_title;
+				$datetime = new DateTime($post->post_date);
+				$date     = $datetime->format('d-m-Y');
+				$link 	  = get_permalink($post->ID);
+				$title 	  = $post->post_title . ' - ' . $date;
 
-				$text      = '<li class="smcfp-item"><a href="%1$s" class="smcfp-link">%2$s</a></li>';
-				$listHtml .= sprintf($text, $postLink, $postTitle . ' - ' . $postDate);
+				$text = '<li class="smcfp-item"><a href="%1$s" class="smcfp-link">%2$s</a></li>';
+				$list .= sprintf($text, $link, $title);
 			}
-			
-			echo sprintf('<ul class="smcfp-list">%s</ul>', $listHtml);
+
+			$output = '';
+			if (!is_null($head))
+			{
+				$output .= sprintf('<h5>%s</h5>', $head);
+			}
+			$output .= sprintf('<ul class="smcfp-list">%s</ul>', $list);
+
+			return $output;
 		}
-		else
-		{
-			echo '<p>No featured posts found</p>';
-		}
+
+		return '<p>No featured posts found</p>';
 	}
 
 
@@ -105,16 +112,17 @@ class Smcfp
 	 */
 	private static function getFeaturedPosts()
 	{
+		$count = get_option('smc_featured_count', 5);
 		$args = array(
 			'post_status'    => 'publish',
-			'posts_per_page' => 5,
+			'posts_per_page' => $count,
 			'orderby'        => 'date',
       		'order'		     => 'DESC',
 			'cache_results'  => true,
 			'meta_query'     => array(
 				array(
 					'key'   => SMC_FEATURED_META_OPTION,
-					'value' => 'true'
+					'value' => 1
 				)
 			)
    		);

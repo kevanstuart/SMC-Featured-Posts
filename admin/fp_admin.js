@@ -8,7 +8,7 @@ jQuery(document).ready(function($)
 		var url  = ajax_object.ajax_url;
 		var data = { 
 			post_id: elmt.data('post-id'), 
-			smc_fp_link_nonce: elmt.data('nonce'),
+			fp_link_nonce: elmt.data('nonce'),
 			action: elmt.data('action') 
 		};
 

@@ -40,7 +40,7 @@ function smcActivate() {
       $GLOBALS['wp_version'], 
       SMC_MINIMUM_WP_VERSION, 
       '<'
-	) 
+	  ) 
 	) {
 		$string = sprintf( 
 			'SMC Featured Posts requires WordPress %s or higher', 

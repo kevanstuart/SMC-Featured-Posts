@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: featured posts, 
 Requires at least: 3.0.1
-Tested up to: 4.3
-Stable tag: 4.3
+Tested up to: 5.2
+Stable tag: 5.2
 
 SMC Featured Posts allows you to select posts to be featured in a list or widget
 
@@ -31,6 +31,9 @@ display and a display count when using the shortcode - the widget is the standar
 under Appearance -> Widgets
 
 == Changelog ==
+
+= 3.0 =
+Code improvements and simplification
 
 = 2.0 =
 An upgrade from FPK plugin supplied to blog.haimrich

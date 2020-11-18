@@ -35,12 +35,12 @@ register_activation_hook( __FILE__, 'smcActivate' );
 register_deactivation_hook( __FILE__, 'smcDeactivate' );
 
 function smcActivate() {
-	if ( 
-		version_compare( 
-			$GLOBALS['wp_version'], 
-			SMC_MINIMUM_WP_VERSION, 
-			'<'
-		) 
+  if ( 
+    version_compare( 
+      $GLOBALS['wp_version'], 
+      SMC_MINIMUM_WP_VERSION, 
+      '<'
+	) 
 	) {
 		$string = sprintf( 
 			'SMC Featured Posts requires WordPress %s or higher', 

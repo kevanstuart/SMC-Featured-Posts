@@ -28,8 +28,8 @@ class FpDisplay {
 			foreach( $posts AS $post ) {
 				$list[] = sprintf(
 					'<li class="fp-item"><a href="%1$s" class="fp-link">%2$s</a></li>',
-					get_permalink( $post->ID );,
-					$post->post_title;
+					get_permalink( $post->ID ),
+					$post->post_title
 				);
 			}
 
